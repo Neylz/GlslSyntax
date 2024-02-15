@@ -101,3 +101,19 @@ print(f"v5 == v6 = {v5 == v6}\n"
       f"vec4(1, 2, 3, 4).normal = {vec4(1, 2, 3, 4).normal}\n"
       f"vec4(1, 2, 3, 4).normalize = {vec4(1, 2, 3, 4).normalize()}\n"
       f"vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize() = {vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize()}\n")
+
+
+print("\n> Testing vec2() and vec3() operations")
+print(f"v2 = {v2} and v4 = {v4}\n")
+
+
+print(f"v2 + v4 = {v2 + v4}\n"
+      f"v2 - v4 = {v2 - v4}\n"
+      f"v2 * v4 = {v2 * v4}\n"
+      f"v2 * 2 = {v2 * 2}\n"
+      f"2 * v2 = {2 * v2}\n"
+      f"v2.magnitude = {v2.magnitude}\n"
+      f"v2.normalize() = {v2.normalize()}\n"
+      f"v2.dot(v4) = {v2.dot(v4)}\n")
+
+

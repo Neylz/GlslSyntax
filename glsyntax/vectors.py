@@ -148,7 +148,9 @@ class _vecBase(object):
 
 
     def dot(self, other: Self) -> _Number:
-        return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])
+        # dot product
+        size = min(self._N, other._N)
+        return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:size]])
 
     def normalize(self) -> Self:
         # modify the vector in place
