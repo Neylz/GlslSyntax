@@ -1,3 +1,4 @@
+from typing import Union
 from glslvm import *
 
 
@@ -23,4 +24,3 @@ print("2 * v1 =", 2 * v1)
 print("v1.length() =", v1.length())
 print("v1.normalize() =", v1.normalize())
 print("v1.dot(v2) =", v1.dot(v2))
-
