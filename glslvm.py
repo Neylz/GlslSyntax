@@ -127,7 +127,7 @@ class _vecBase(object):
 
     def __getattr__(self, item):
         if (len(item) <= self._N) and (
-                set(item).issubset(_ATTRIBUTES[:2]) or set(item).issubset(_ATTRIBUTES_ALIASES[:2])):
+                set(item).issubset(_ATTRIBUTES[:self._N]) or set(item).issubset(_ATTRIBUTES_ALIASES[:self._N])):
             if _ATTRIBUTES_ALIASES.find(item[0]) != -1:
                 for char in item:
                     print(char)
@@ -139,7 +139,7 @@ class _vecBase(object):
                     return vec2(getattr(self, item[0]), getattr(self, item[1]))
 
         else:
-            raise AttributeError(f"'vec2' object has no attribute '{item}'")
+            raise AttributeError(f"'vec{self._N}' object has no attribute '{item}'")
 
     @property
     def size(self) -> int:
