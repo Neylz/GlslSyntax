@@ -21,7 +21,7 @@ print(f"v1 + v2 = {v1 + v2}\n"
       f"v1 * v2 = {v1 * v2}\n"
       f"v1 * 2 = {v1 * 2}\n"
       f"2 * v1 = {2 * v1}\n"
-      f"v1.length() = {v1.length()}\n"
+      f"v1.magnitude = {v1.magnitude}\n"
       f"v1.normalize() = {v1.normalize()}\n"
       f"v1.dot(v2) = {v1.dot(v2)}\n")
 
@@ -52,12 +52,16 @@ print(f"v3 + v4 = {v3 + v4}\n"
       f"v3 * v4 = {v3 * v4}\n"
       f"v3 * 2 = {v3 * 2}\n"
       f"2 * v3 = {2 * v3}\n"
-      f"v3.length() = {v3.length()}\n"
+      f"v3.magnitude = {v3.magnitude}\n"
+      f"v3.normal = {v3.normal}\n"
+      f"v3 = {v3}\n"
       f"v3.normalize() = {v3.normalize()}\n"
+      f"v3 = {v3}\n"
       f"v3.dot(v4) = {v3.dot(v4)}\n")
 
 print(f"v3 == v4 = {v3 == v4}\n"
       f"v3 != v4 = {v3 != v4}\n"
       f"v3 == vec3(1, 2, 3) = {v3 == vec3(1, 2, 3)}\n")
+
 
 

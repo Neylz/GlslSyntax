@@ -115,15 +115,6 @@ class _vecBase(object):
     def __neg__(self) -> Self:
         return type(self)(*[-getattr(self, attr) for attr in _ATTRIBUTES[:self._N]])
 
-    def dot(self, other: Self) -> _Number:
-        return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])
-
-    def length(self) -> _Number:
-        return sum([getattr(self, attr) ** 2 for attr in _ATTRIBUTES[:self._N]]) ** 0.5
-
-    def normalize(self) -> Self:
-        length = self.length()
-        return type(self)(*[getattr(self, attr) / length for attr in _ATTRIBUTES[:self._N]])
 
     def __getattr__(self, item):
         if (len(item) <= self._N) and (
@@ -144,6 +135,24 @@ class _vecBase(object):
     @property
     def size(self) -> int:
         return self._N
+
+    @property
+    def magnitude(self) -> _Number:
+        return sum([getattr(self, attr) ** 2 for attr in _ATTRIBUTES[:self._N]]) ** 0.5
+
+    @property
+    def normal(self) -> Self:
+        return self / self.magnitude
+
+    def dot(self, other: Self) -> _Number:
+        return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])
+
+
+    def normalize(self) -> Self:
+        # modify the vector in place
+        for attr in _ATTRIBUTES[:self._N]:
+            setattr(self, attr, getattr(self, attr) / self.magnitude)
+        return self
 
 
 class _matBase(_vecBase):
