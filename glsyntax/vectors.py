@@ -1,4 +1,4 @@
-from typing import Any, Self, Union, Tuple
+from typing import Self, Union, Tuple
 
 _Number = Union[int, float]
 
@@ -156,15 +156,6 @@ class _vecBase(object):
         return self
 
 
-class _matBase(_vecBase):
-    _M = 0
-
-    def __getattr__(self, item):
-        pass
-
-    @property
-    def size(self) -> Tuple[int, int]:
-        return self._N, self._M
 
 
 
