@@ -143,16 +143,18 @@ class _vecBase(object):
     @property
     def normal(self) -> Self:
         # return a new vector without modifying the original
-        return type(self)(*[getattr(self, attr) / self.magnitude for attr in _ATTRIBUTES[:self._N]])
+        m = self.magnitude
+        return type(self)(*[getattr(self, attr) / m for attr in _ATTRIBUTES[:self._N]])
+
 
     def dot(self, other: Self) -> _Number:
         return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])
 
-
     def normalize(self) -> Self:
         # modify the vector in place
+        m = self.magnitude
         for attr in _ATTRIBUTES[:self._N]:
-            setattr(self, attr, getattr(self, attr) / self.magnitude)
+            setattr(self, attr, getattr(self, attr) / m)
         return self
 
 
