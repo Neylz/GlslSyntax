@@ -142,7 +142,8 @@ class _vecBase(object):
 
     @property
     def normal(self) -> Self:
-        return self / self.magnitude
+        # return a new vector without modifying the original
+        return type(self)(*[getattr(self, attr) / self.magnitude for attr in _ATTRIBUTES[:self._N]])
 
     def dot(self, other: Self) -> _Number:
         return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])

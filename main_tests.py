@@ -64,4 +64,41 @@ print(f"v3 == v4 = {v3 == v4}\n"
       f"v3 == vec3(1, 2, 3) = {v3 == vec3(1, 2, 3)}\n")
 
 
+print("\n> Testing vec4() operations")
+v5 = vec4(1, 2, 3, 4)
+v6 = vec4(5, 6, 7, 8)
+print(f"v5 = {v5} and v6 = {v6}\n")
 
+print(f"v5.size = {v5.size}\n")
+
+print(f"v5.x = {v5.x}\n"
+      f"v5.y = {v5.y}\n"
+      f"v5.z = {v5.z}\n"
+      f"v5.w = {v5.w}\n"
+      f"v5.xy = {v5.xy}\n"
+      f"v5.yz = {v5.yz}\n"
+      f"v5.zw = {v5.zw}\n"
+      f"v5.xyz = {v5.xyz}\n"
+      f"v5.yzw = {v5.yzw}\n"
+      f"v5.zwx = {v5.zwx}\n"
+      f"v5.xyzw = {v5.xyzw}\n"
+      f"v5.yzwx = {v5.yzwx}\n"
+      f"v5.zwxy = {v5.zwxy}\n")
+
+print(f"v5 + v6 = {v5 + v6}\n"
+      f"v5 - v6 = {v5 - v6}\n"
+      f"v5 * v6 = {v5 * v6}\n"
+      f"v5 * 2 = {v5 * 2}\n"
+      f"2 * v5 = {2 * v5}\n"
+      f"v5.magnitude = {v5.magnitude}\n"
+      f"v5.normal = {v5.normal}\n"
+      f"v5 = {v5}\n"
+      f"v5.normalize() = {v5.normalize()}\n"
+      f"v5 = {v5}\n"
+      f"v5.dot(v6) = {v5.dot(v6)}\n")
+
+print(f"v5 == v6 = {v5 == v6}\n"
+      f"v5 != v6 = {v5 != v6}\n"
+      f"vec4(1, 2, 3, 4).normal = {vec4(1, 2, 3, 4).normal}\n"
+      f"vec4(1, 2, 3, 4).normalize = {vec4(1, 2, 3, 4).normalize()}\n"
+      f"vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize() = {vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize()}\n")
