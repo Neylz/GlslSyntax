@@ -130,6 +130,13 @@ v8 = vec4(2, vec2(1.5), 0)
 print(f"v8 = {v8}\n")
 print(f"v8.wxw = {v8.wxw}\n")
 
-v9 = vec4(v7.y, v8.xxw)
+v9 = vec4(v7.y, v8.xzw)
+
+print(f"v9 = {v9}\n")
+
+v9.x = 5
+print(f"v9 = {v9}\n")
+
+v9.yz = vec2(6, 7)
 
 print(f"v9 = {v9}\n")
