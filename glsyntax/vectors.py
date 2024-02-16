@@ -192,6 +192,13 @@ class vec2(_vecBase):
 class vec3(_vecBase):
     _N = 3
 
+    def cross(self, other: Self) -> Self:
+        # cross product
+        x = self.y * other.z - self.z * other.y
+        y = self.z * other.x - self.x * other.z
+        z = self.x * other.y - self.y * other.x
+        return vec3(x, y, z)
+
 
 class vec4(_vecBase):
     _N = 4
