@@ -121,8 +121,15 @@ print(f"v2 == v4 = {v2 == v4}\n"
       f"v2 == vec2(1, 2) = {v2 == vec2(1, 2)}\n")
 
 print("\n> Testing advanced declarations")
-v7 = vec4(2, vec2(1), 0)
+v7 = vec3(1)
 
+print(f"v7 = {v7}\n")
 
+v8 = vec4(2, vec2(1.5), 0)
 
+print(f"v8 = {v8}\n")
+print(f"v8.wxw = {v8.wxw}\n")
 
+v9 = vec4(v7.y, v8.xxw)
+
+print(f"v9 = {v9}\n")

@@ -1,15 +1,35 @@
-from typing import Self, Union, Tuple
+from typing import Self, Union, Any
 
 _Number = Union[int, float]
+_Vector = Union["vec2", "vec3", "vec4"]
 
 _ATTRIBUTES = "xyzw"
 _ATTRIBUTES_ALIASES = "rgba"
+
+
+def array_to_vec(array: list[_Number]) -> Union[_Number, _Vector]:
+    match len(array):
+        case 1:
+            return array[0]
+        case 2:
+            return vec2(*array)
+        case 3:
+            return vec3(*array)
+        case 4:
+            return vec4(*array)
+        case _:
+            raise ValueError(f"Invalid number of elements for a vector: {len(array)} (expected <= 4)")
+
 
 
 class _vecBase(object):
     _N = 0
 
     def __init__(self, *args: Union[_Number, Self]):
+        if len(args) == 1 and isinstance(args[0], _Number):
+            for i in range(self._N):
+                setattr(self, _ATTRIBUTES[i], args[0])
+            return
         # count the number of arguments
         n_data = 0
         for arg in args:
@@ -37,13 +57,17 @@ class _vecBase(object):
     def __repr__(self) -> str:
         return f"vec{self._N}({', '.join([str(getattr(self, attr)) for attr in _ATTRIBUTES[:self._N]])})"
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, _vecBase):
+            return False
         return all([getattr(self, attr) == getattr(other, attr) for attr in _ATTRIBUTES[:self._N]])
 
-    def __ne__(self, other: Self) -> bool:
+    def __ne__(self, other: Any) -> bool:
+        if not isinstance(other, _vecBase):
+            return True
         return not self == other
 
-    def __mul__(self, other: Union[_Number, Self]) -> Union[Self, _Number]:
+    def __mul__(self, other: Union[_Number, _Vector]) -> Union[Self, _Number]:
         # vector * scalar
         if isinstance(other, _Number):
             return type(self)(*[getattr(self, attr) * other for attr in _ATTRIBUTES[:self._N]])
@@ -63,7 +87,7 @@ class _vecBase(object):
         # scalar * vector
         return type(self)(*[other * getattr(self, attr) for attr in _ATTRIBUTES[:self._N]])
 
-    def __add__(self, other: Union[_Number, Self]) -> Self:
+    def __add__(self, other: Union[_Number, _Vector]) -> Self:
         if isinstance(other, _Number):
             return type(self)(*[getattr(self, attr) + other for attr in _ATTRIBUTES[:self._N]])
         elif isinstance(other, _vecBase):
@@ -80,7 +104,7 @@ class _vecBase(object):
         # add the scalar to each component
         return type(self)(*[getattr(self, attr) + other for attr in _ATTRIBUTES[:self._N]])
 
-    def __sub__(self, other: Union[_Number, Self]) -> Self:
+    def __sub__(self, other: Union[_Number, _Vector]) -> Self:
         if isinstance(other, _Number):
             return type(self)(*[getattr(self, attr) - other for attr in _ATTRIBUTES[:self._N]])
         elif isinstance(other, _vecBase):
@@ -95,7 +119,7 @@ class _vecBase(object):
     def __rsub__(self, other: _Number) -> Self:
         return type(self)(*[other - getattr(self, attr) for attr in _ATTRIBUTES[:self._N]])
 
-    def __truediv__(self, other: Union[_Number, Self]) -> Self:
+    def __truediv__(self, other: Union[_Number, _Vector]) -> Self:
         if isinstance(other, _Number):
             # divide each component by the scalar
             return type(self)(*[getattr(self, attr) / other for attr in _ATTRIBUTES[:self._N]])
@@ -123,11 +147,8 @@ class _vecBase(object):
                 for char in item:
                     print(char)
                     item = item.replace(char, _ATTRIBUTES[_ATTRIBUTES_ALIASES.find(char)])
-            match len(item):
-                case 1:
-                    return getattr(self, item[0])
-                case 2:
-                    return vec2(getattr(self, item[0]), getattr(self, item[1]))
+            # return a new vector of the right size with the selected components
+            return array_to_vec([getattr(self, attr) for attr in item])
 
         else:
             raise AttributeError(f"'vec{self._N}' object has no attribute '{item}'")
@@ -147,9 +168,9 @@ class _vecBase(object):
         return type(self)(*[getattr(self, attr) / m for attr in _ATTRIBUTES[:self._N]])
 
 
-    def dot(self, other: Self) -> _Number:
+    def dot(self, other: _Vector) -> _Number:
         # dot product
-        size = min(self._N, other._N)
+        size = min(self.size, other.size)
         return sum([getattr(self, attr) * getattr(other, attr) for attr in _ATTRIBUTES[:size]])
 
     def normalize(self) -> Self:
