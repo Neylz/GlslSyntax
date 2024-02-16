@@ -180,6 +180,10 @@ class _vecBase(object):
             setattr(self, attr, getattr(self, attr) / m)
         return self
 
+    def distance(self, other: _Vector) -> _Number:
+        # distance between two points
+        return (self - other).magnitude
+
 
 
 
