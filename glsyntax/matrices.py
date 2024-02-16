@@ -12,3 +12,5 @@ class _matBase(_vecBase):
     def size(self) -> Tuple[int, int]:
         return self._N, self._M
 
+    
+
