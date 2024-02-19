@@ -1,4 +1,4 @@
-from typing import Self, Union, Any
+from typing import Self, Union, Any, List
 
 _Number = Union[int, float]
 _Vector = Union["vec2", "vec3", "vec4"]
@@ -167,6 +167,8 @@ class _vecBase(object):
             raise AttributeError(f"'vec{self._N}' object has no attribute '{item}'")
 
     def __getitem__(self, key: int) -> _Number:
+        if key >= self._N:
+            raise IndexError(f"index {key} is out of range for vector of size {self._N}")
         return getattr(self, _ATTRIBUTES[key])
 
     def __setitem__(self, key: int, value: _Number) -> None:
@@ -203,6 +205,9 @@ class _vecBase(object):
     def distance(self, other: _Vector) -> _Number:
         # distance between two points
         return (self - other).magnitude
+
+    def getArray(self) -> List[_Number]:
+        return [self[i] for i in range(self._N)]
 
 
 

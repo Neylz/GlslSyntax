@@ -1,5 +1,5 @@
 from .vectors import *
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 
 _Number = Union[int, float]
 _Vector = Union[vec2, vec3, vec4]
@@ -19,7 +19,7 @@ class _matBase(object):
         else:
             return f"mat{self._N}_{self._M}"
 
-    def __init__(self, *args):
+    def __init__(self, *args: Union[_Number, _Vector, _Matrix, List[_Number], List[List[_Number]]]):
         if len(args) == 1:
             if isinstance(args[0], _Vector):
                 if args[0].size != self._N:
@@ -40,8 +40,12 @@ class _matBase(object):
                 n_data += 1
             elif isinstance(arg, _Vector):
                 n_data += arg.size
-            elif isinstance(arg, _Matrix):
+            elif isinstance(arg, _matBase):
                 n_data += arg.size[0] * arg.size[1]
+            elif isinstance(arg, list) and all(isinstance(e, _Number) for e in arg):
+                n_data += len(arg)
+            elif isinstance(arg, list) and all(isinstance(e, list) for e in arg):
+                n_data += sum(len(e) for e in arg)
             else:
                 raise ValueError(f"Invalid type for {self._get_name()}: {type(arg)}")
 
@@ -60,11 +64,83 @@ class _matBase(object):
                     for j in range(arg.size):
                         self.mat[i // self._N][i % self._N] = arg[j]
                         i += 1
-                elif isinstance(arg, _Matrix):
+                elif isinstance(arg, _matBase):
                     for j in range(arg.size[0]):
                         for k in range(arg.size[1]):
                             self.mat[i // self._N][i % self._N] = arg[j][k]
                             i += 1
+                elif isinstance(arg, list) and all(isinstance(e, _Number) for e in arg):
+                    for j in arg:
+                        self.mat[i // self._N][i % self._N] = j
+                        i += 1
+                elif isinstance(arg, list) and all(isinstance(e, list) for e in arg):
+                    for e in arg:
+                        for j in e:
+                            self.mat[i // self._N][i % self._N] = j
+                            i += 1
+
+    def __add__(self, other: Union[_Matrix, _Number]) -> Self:
+        if isinstance(other, _matBase):
+            if self.size != other.size:
+                raise ValueError(f"Invalid size for a matrix: {other.size} (expected {self.size})")
+            return self.__class__(*[self[i] + other[i] for i in range(self._M)])
+        elif isinstance(other, _Number):
+            return self.__class__(*[self[i] + other for i in range(self._M)])
+
+    def __radd__(self, other: _Number) -> Self:
+        return self.__class__(*[self[i] + other for i in range(self._M)])
+
+    def __sub__(self, other: Union[_Matrix, _Number]) -> Self:
+        if isinstance(other, _matBase):
+            if self.size != other.size:
+                raise ValueError(f"Invalid size for a matrix: {other.size} (expected {self.size})")
+            return self.__class__(*[self[i] - other[i] for i in range(self._M)])
+        elif isinstance(other, _Number):
+            return self.__class__(*[self[i] - other for i in range(self._M)])
+
+    def __rsub__(self, other: _Number) -> Self:
+        return self.__class__(*[other - self[i] for i in range(self._M)])
+
+    def __mul__(self, other: Union[_Matrix, _Number]) -> Self:
+        if isinstance(other, _matBase):
+            if self._N != other.size[1]:
+                raise ValueError(f"Invalid size for a matrix: {other.size} (expected {self.size})")
+            else:
+                res = [[0 for _ in range(other.size[1])] for _ in range(self._N)]
+                for i in range(self._N):
+                    for j in range(other.size[1]):
+                        for k in range(self._M):
+                            res[i][j] += self[i][k] * other[k][j]
+                return self.__class__(*res)
+
+        elif isinstance(other, _Number):
+            return self.__class__(*[self[i] * other for i in range(self._M)])
+
+    def __rmul__(self, other: _Number) -> Self:
+        return self.__class__(*[self[i] * other for i in range(self._M)])
+
+    def __truediv__(self, other: Union[_Number, _Matrix]) -> Self:
+        if isinstance(other, _matBase):
+            # make it component-wise
+            if self.size != other.size:
+                raise ValueError(f"Invalid size for a matrix: {other.size} (expected {self.size})")
+            else:
+                return self.__class__(*[self[i] / other[i] for i in range(self._M)])
+        else:
+            return self.__class__(*[self[i] / other for i in range(self._M)])
+
+
+
+    def __rtruediv__(self, other: _Number) -> Self:
+        return self.__class__(*[other / self[i] for i in range(self._M)])
+
+    def __getitem__(self, key: int) -> _Vector:
+        return self.mat[key]
+
+    def __setitem__(self, key: int, value: _Vector) -> None:
+        if value.size != self._N:
+            raise ValueError(f"Invalid size for a vector: {value.size} (expected {self._N})")
+        self.mat[key] = value
 
     def __repr__(self) -> str:
         return f"{self._get_name()}{self.mat}"
@@ -76,21 +152,113 @@ class _matBase(object):
             if i != 0:
                 strout += tab
             strout += f"{self.mat[i]}"
-            if i != self._M-1:
+            if i != self._M - 1:
                 strout += "\n"
         strout += "]"
         print(strout)
 
-    def __getitem__(self, key: int) -> _Vector:
-        return self.mat[key]
-
-    def __setitem__(self, key: int, value: _Vector) -> None:
-        if value.size != self._N:
-            raise ValueError(f"Invalid size for a vector: {value.size} (expected {self._N})")
-        self.mat[key] = value
-
     def isSquare(self) -> bool:
         return self._N == self._M
+
+    def isDiagonal(self) -> bool:
+        for i in range(self._M):
+            for j in range(self._N):
+                if i != j and self[i][j] != 0:
+                    return False
+        return True
+
+    def isSymmetric(self) -> bool:
+        if not self.isSquare():
+            return False
+        for i in range(self._M):
+            for j in range(i):
+                if self[i][j] != self[j][i]:
+                    return False
+        return True
+
+    def isIdentity(self) -> bool:
+        if not self.isSquare():
+            return False
+        for i in range(self._M):
+            for j in range(self._N):
+                if i == j and self[i][j] != 1:
+                    return False
+                elif i != j and self[i][j] != 0:
+                    return False
+        return True
+
+    def isOrthogonal(self) -> bool:
+        if not self.isSquare():
+            return False
+        return self * self.T == self.Id
+
+
+    def getArray(self) -> List[List[_Number]]:
+        return [self[i].getArray() for i in range(self._M)]
+
+
+    def __det(self, mat: List[List[_Number]]) -> _Number:
+        if len(mat) == 1:
+            return mat[0][0]
+        else:
+            res = 0
+            for i in range(len(mat)):
+                submat = [mat[j][:i] + mat[j][i + 1:] for j in range(1, len(mat))]
+                res += ((-1) ** i) * mat[0][i] * self.__det(submat)
+            return res
+
+    @property
+    def det(self) -> _Number:
+        if not self.isSquare():
+            raise ValueError("Determinant is only defined for square matrices")
+        else:
+            return self.__det(self.getArray())
+
+    def transpose(self) -> Self:
+        # modify the matrix in place by transposing it
+        self.mat = self.T.mat
+        return self
+
+    @property
+    def T(self) -> Self:
+        # return a new transposed matrix
+        res = [empty_vec(self._M) for _ in range(self._N)]
+        for i in range(self._M):
+            for j in range(self._N):
+                res[j][i] = self[i][j]
+        return self.__class__(*res)
+
+    @property
+    def Id(self) -> Self:
+        if self.isSquare():
+            # return a new identity matrix
+            res = [empty_vec(self._N) for _ in range(self._M)]
+            for i in range(self._M):
+                res[i][i] = 1
+            return self.__class__(*res)
+        else:
+            raise ValueError("Identity matrix must be square")
+
+
+    def __inverse(self, mat: List[List[_Number]]) -> List[List[_Number]]:
+        det = self.__det(mat)
+        if det == 0:
+            raise ValueError("Matrix is not invertible")
+        else:
+            inverse_matrix = [[0 for _ in range(self._N)] for _ in range(self._M)]
+            for i in range(self._M):
+                for j in range(self._N):
+                    submat = [row[:j] + row[j + 1:] for k, row in enumerate(mat) if k != i]
+                    inverse_matrix[i][j] = ((-1) ** (i + j)) * self.__det(submat) / det
+            return inverse_matrix
+            
+
+
+    def inverse(self):
+        if not self.isSquare():
+            raise ValueError("Inverse is only defined for square matrices")
+        else:
+            return self.__class__(*self.__inverse(self.getArray())).transpose()
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -110,3 +278,33 @@ class mat3(_matBase):
 class mat4(_matBase):
     _N = 4
     _M = 4
+
+
+class mat2x3(_matBase):
+    _N = 2
+    _M = 3
+
+
+class mat3x2(_matBase):
+    _N = 3
+    _M = 2
+
+
+class mat2x4(_matBase):
+    _N = 2
+    _M = 4
+
+
+class mat4x2(_matBase):
+    _N = 4
+    _M = 2
+
+
+class mat3x4(_matBase):
+    _N = 3
+    _M = 4
+
+
+class mat4x3(_matBase):
+    _N = 4
+    _M = 3

@@ -1,6 +1,5 @@
 from glslsyntax import *
 
-
 print("Testing the main functions of the GLSL Vectors and Matrices library")
 
 print("\n> Testing vec2() operations")
@@ -27,7 +26,6 @@ print(f"v1 + v2 = {v1 + v2}\n"
 print(f"v1 == v2 = {v1 == v2}\n"
       f"v1 != v2 = {v1 != v2}\n"
       f"v1 == vec2(1, 2) = {v1 == vec2(1, 2)}\n")
-
 
 print("\n> Testing vec3() operations")
 v3 = vec3(1, 2, 3)
@@ -61,7 +59,6 @@ print(f"v3 + v4 = {v3 + v4}\n"
 print(f"v3 == v4 = {v3 == v4}\n"
       f"v3 != v4 = {v3 != v4}\n"
       f"v3 == vec3(1, 2, 3) = {v3 == vec3(1, 2, 3)}\n")
-
 
 print("\n> Testing vec4() operations")
 v5 = vec4(1, 2, 3, 4)
@@ -102,10 +99,8 @@ print(f"v5 == v6 = {v5 == v6}\n"
       f"vec4(1, 2, 3, 4).normalize = {vec4(1, 2, 3, 4).normalize()}\n"
       f"vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize() = {vec4(1, 2, 3, 4).normal == vec4(1, 2, 3, 4).normalize()}\n")
 
-
 print("\n> Testing vec2() and vec3() operations")
 print(f"v2 = {v2} and v4 = {v4}\n")
-
 
 print(f"v2 + v4 = {v2 + v4}\n"
       f"v2 - v4 = {v2 - v4}\n"
@@ -142,7 +137,6 @@ v9.yz = vec2(6, 7)
 print(f"v9 = {v9}\n")
 print(f"v9[0] = {v9[0]}\n")
 
-
 print("\n> Testing matrix operations")
 m1 = mat3(5)
 
@@ -156,3 +150,36 @@ m2 = mat3(1, 2, 3,
 print(f"m2 = {m2}")
 m2.fprint()
 
+m3 = mat3(1, 2, 3,
+          4, 5, 6,
+          7, 8, 9)
+
+print(
+    f"m3 - m2 = {m3 - m2}\n"
+    f"m3 + m2 = {m3 + m2}\n"
+    f"m3*2 = {m3 * 2}\n"
+    f"2 * m3 = {2 * m3}\n"
+    f"m3/2 = {m3 / 2}\n"
+    f"m3 * m2 = {m3 * m2}\n"
+    f"m3 * v2 = {m3 * v2}\n"
+    f"m3 + 1 = {m3 + 1}\n"
+)
+
+m4 = mat3(m2)
+m4[1].x = -4
+print(
+    f"m4 = {m4}\n"
+    f"m4.det = {m4.det}\n"
+    f"m4.T = {m4.Id}\n"
+)
+m4.T.fprint()
+m4.fprint()
+
+print(f"m4.det = {m4.det}\n")
+
+print(f"m4.getArray() = {m4.getArray()}\n")
+
+print(f"m4.inverse() = {m4.inverse()}\n"
+      f"m4.inverse() * m4 = {m4.inverse() * m4}\n"
+      f"m4 * m4.inverse() = {m4 * m4.inverse()}\n"
+      )
