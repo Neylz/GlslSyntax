@@ -119,6 +119,66 @@ print(u / v) # vec3(0.25, 0.4, 0.5)
 ```
 
 
+### Matrices
+
+#### Declaration
+
+Matrices can be declared by typing `mat` followed by the number of rows and columns. Up to 4x4 matrices are supported. To declare the matrix.
+> [!INFO]
+> The arguments format follows the [GLSL matrix declaration](https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf#page=70). That means that the first argument is the first **column**, the second argument is the second **column**, and so on.
+
+Here are some examples of matrix declaration:
+```python
+# Diagonal matrix
+m = mat2(1) 
+n = mat3(2)
+
+# m is an identity matrix: 
+# | 1 0 |
+# | 0 1 |
+
+# n is a diagonal matrix:
+# | 2 0 0 |
+# | 0 2 0 |
+# | 0 0 2 |
+
+o = mat2(1, 2,  # first column
+         3, 4)  # second column
+# o is a 2x2 matrix:
+# | 1 3 |
+# | 2 4 |
+# but stored as:
+# vec2(1, 2),
+# vec2(3, 4)
+
+p = mat3(vec3(1, 2, 3),  # first column
+         vec3(4, 5, 6),  # second column
+         vec3(7, 8, 9))  # third column
+# p is a 3x3 matrix:
+# | 1 4 7 |
+# | 2 5 8 |
+# | 3 6 9 |
+# but stored as:
+# vec3(1, 2, 3),
+# vec3(4, 5, 6),
+# vec3(7, 8, 9)
+```
+
+Additionally to the classic GLSL declaration, an extra feature of this package is the ability to input as arguments different types of vectors and matrices. If the arguments arn't vectors or matrices of the expected size but there are the right number of components, the package will try to create the matrix with the components of the arguments.
+
+```python
+u = vec2(1, 2)
+v = vec2(3, 4)
+w = vec3(5, 6, 7)
+
+m = mat4(u, v, w, vec4(8, 9, 10, 11), vec4(12, 13, 14, 15), 16)
+# m is a 4x4 matrix:
+# | 1  5  9  13 |
+# | 2  6  10 14 |
+# | 3  7  11 15 |
+# | 4  8  12 16 |
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -131,3 +191,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [ ] Matrices
 - [ ] Modifying multiple components at once (eg. `vec.xz = vec2(1, 2)`)
+- [ ] Supoort lists as declaration arguments
