@@ -227,6 +227,30 @@ The following operators are available for matrices:
 - `*` to multiply a matrix by a scalar or to get the matrix product of two matrices.
 - `/` to divide a matrix by a scalar or to divide a matrix by another matrix component-wise. The two matrices must have the same size.
 
+#### Access values by index
+
+For iteratives approaches, you can access the components of the matrix by index.
+
+```python
+m = mat2(1, 2,
+         3, 4)
+
+# Accessing by index
+print(m[0][0]) # 1
+
+# Modifying by index
+m[0][0] = 5
+
+print(m) # mat2(5, 2, 3, 4)
+
+print(m[0]) # vec2(5, 3)
+
+m[0] = vec2(1, 2)
+
+print(m) # mat2(1, 2, 3, 4)
+```
+
+
 #### Examples
 
 ```python
