@@ -1,4 +1,4 @@
-from glsyntax import *
+from glslsyntax import *
 
 
 print("Testing the main functions of the GLSL Vectors and Matrices library")
