@@ -5,7 +5,6 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="glslsyntax",
-    version="0.0.1",
     author="Neylz",
     author_email="contact@neylz.dev",
     license='MIT',
@@ -24,5 +23,7 @@ setuptools.setup(
     ],
 
     packages=['glslsyntax'],
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
     python_requires=">=3.10"
 )
