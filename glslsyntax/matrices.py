@@ -129,10 +129,24 @@ class _matBase(object):
         else:
             return self.__class__(*[self[i] / other for i in range(self._M)])
 
-
-
     def __rtruediv__(self, other: _Number) -> Self:
         return self.__class__(*[other / self[i] for i in range(self._M)])
+
+    def __neg__(self) -> Self:
+        return self.__class__(*[-self[i] for i in range(self._M)])
+
+    def __eq__(self, other: _Matrix) -> bool:
+        if not isinstance(other, _matBase):
+            return False
+        if self.size != other.size:
+            return False
+        for i in range(self._M):
+            if self[i] != other[i]:
+                return False
+        return True
+
+    def __ne__(self, other: _Matrix) -> bool:
+        return not self.__eq__(other)   
 
     def __getitem__(self, key: int) -> _Vector:
         return self.mat[key]
@@ -253,12 +267,16 @@ class _matBase(object):
             return inverse_matrix
             
 
-
-    def inverse(self):
+    @property
+    def Inv(self):
         if not self.isSquare():
             raise ValueError("Inverse is only defined for square matrices")
         else:
             return self.__class__(*self.__inverse(self.getArray())).transpose()
+
+    def invert(self) -> Self:
+        self.mat = self.Inv.mat
+        return self
 
     @property
     def size(self) -> Tuple[int, int]:

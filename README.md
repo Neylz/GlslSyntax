@@ -54,6 +54,8 @@ All vectors have the following attributes:
 - `normal` to get the normalized vector. This doesn't modify the original vector.
 - `size` to get the number of dimensions of the vector.
 
+##### Swizzling
+
 The `x`, `y`, `z`, `w` attributes can be used together to create a new vector with a number of dimensions equal to the number of attributes used. The order of the attributes will affect the order of the components in the new vector.
 ```python
 u = vec3(1, 2, 3)
@@ -76,6 +78,25 @@ u.x = 4
 print(vec) # vec3(4, 2, 3)
 ```
 
+#### Access values by index
+For iteratives approaches, you can access the components of the vector by index.
+Though, this can return only a single value, not a vector.
+
+```python
+u = vec3(1, 2, 3)
+
+# Accessing by index
+print(u[0]) # 1
+print(u[1]) # 2
+print(u[2]) # 3
+
+# Modifying by index
+u[0] = 4
+print(u) # vec3(4, 2, 3)
+```
+This functionality exists for better matrix manipulations.
+
+
 #### Methods
 
 Some functions of GLSL have been implemented as methods of the vectors. They are:
@@ -83,6 +104,7 @@ Some functions of GLSL have been implemented as methods of the vectors. They are
 - `cross(<vector>)` to get the cross product of two vectors. This is only available for 3D vectors.
 - `distance(<vector>)` to get the distance between two vectors. This is equivalent to `(<current_vector> - <vector>).magnitude`. Note that in case of vectors with different dimensions, the distance will be calculated with the number of dimensions of the smallest vector.
 - `normalize()` to normalize the vector. This modifies the original vector contrary to the `normal` attribute. Returns the normalized vector.
+- `getArray()` to get the components of the vector as a list.
 
 ```python
 u = vec3(1, 2, 3)
@@ -173,11 +195,60 @@ w = vec3(5, 6, 7)
 
 m = mat4(u, v, w, vec4(8, 9, 10, 11), vec4(12, 13, 14, 15), 16)
 # m is a 4x4 matrix:
-# | 1  5  9  13 |
-# | 2  6  10 14 |
-# | 3  7  11 15 |
-# | 4  8  12 16 |
+# | 1 5 9  13 |
+# | 2 6 10 14 |
+# | 3 7 11 15 |
+# | 4 8 12 16 |
 ```
+
+#### Attributes
+
+All matrices have the following attributes:
+- `size` returns a tuple with the number of columns (number of vectors) and raws of the matrix (size of the vectors).
+- `T` returns the transpose of the matrix. This doesn't modify the original matrix.
+- `Id` returns the identity matrix of the same size as the original matrix.
+- `Inv` returns the inverse of the matrix. This doesn't modify the original matrix.
+- `det` returns the determinant of the matrix.
+
+#### Methods
+- `getArray()` to get the components of the matrix as a list.
+- `isSquare()` to check if the matrix is a square matrix.
+- `isIdentity()` to check if the matrix is an identity matrix.
+- `isDiagonal()` to check if the matrix is a diagonal matrix.
+- `isSymmetric()` to check if the matrix is a symmetric matrix.
+- `isOrthogonal()` to check if the matrix is an orthogonal matrix.
+- `fprint()` to print the matrix in a formatted way.
+
+#### Operators
+
+The following operators are available for matrices:
+- `+` to add two matrices of the same size or to add a scalar to each component of the matrix.
+- `-` to subtract two matrices of the same size or to subtract a scalar to each component of the matrix.
+- `*` to multiply a matrix by a scalar or to get the matrix product of two matrices.
+- `/` to divide a matrix by a scalar or to divide a matrix by another matrix component-wise. The two matrices must have the same size.
+
+#### Examples
+
+```python
+m = mat2(1, 2,
+         3, 4)
+
+n = mat2(5, 6,
+         7, 8)
+
+print(m + n) # mat2(6, 8, 10, 12)
+print(m - n) # mat2(-4, -4, -4, -4)
+print(m * 2) # mat2(2, 4, 6, 8)
+print(m / 2) # mat2(0.5, 1, 1.5, 2)
+print(m * n) # mat2(19, 22, 43, 50)
+
+print(m.T) # mat2(1, 3, 2, 4)
+print(m.Id) # mat2(1, 0, 0, 1)
+print(m.Inv) # mat2(-2, 1, 1.5, -0.5)
+print(m.det) # -2
+```
+
+
 
 ## License
 
@@ -189,6 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Upcoming features
 
-- [ ] Matrices
+- [x] Matrices
+- [ ] Multiply matrices by vectors and other matrices of different sizes
 - [ ] Modifying multiple components at once (eg. `vec.xz = vec2(1, 2)`)
-- [ ] Supoort lists as declaration arguments
+- [x] Supoort lists as declaration arguments
