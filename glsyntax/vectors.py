@@ -21,6 +21,19 @@ def array_to_vec(array: list[_Number]) -> Union[_Number, _Vector]:
             raise ValueError(f"Invalid number of elements for a vector: {len(array)} (expected <= 4)")
 
 
+def empty_vec(n: int, v: int = 0) -> Union[_Number, _Vector]:
+    match n:
+        case 1:
+            return v
+        case 2:
+            return vec2(v)
+        case 3:
+            return vec3(v)
+        case 4:
+            return vec4(v)
+        case _:
+            raise ValueError(f"Invalid size for a vector: {n} (expected <= 4)")
+
 
 class _vecBase(object):
     _N = 0
@@ -152,6 +165,13 @@ class _vecBase(object):
 
         else:
             raise AttributeError(f"'vec{self._N}' object has no attribute '{item}'")
+
+    def __getitem__(self, key: int) -> _Number:
+        return getattr(self, _ATTRIBUTES[key])
+
+    def __setitem__(self, key: int, value: _Number) -> None:
+        setattr(self, _ATTRIBUTES[key], value)
+
 
     @property
     def size(self) -> int:

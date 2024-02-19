@@ -140,3 +140,19 @@ print(f"v9 = {v9}\n")
 v9.yz = vec2(6, 7)
 
 print(f"v9 = {v9}\n")
+print(f"v9[0] = {v9[0]}\n")
+
+
+print("\n> Testing matrix operations")
+m1 = mat3(5)
+
+print(f"m1 = {m1}\n")
+m1.fprint()
+
+m2 = mat3(1, 2, 3,
+          4, 5, 6,
+          7, 8, 9)
+
+print(f"m2 = {m2}")
+m2.fprint()
+
