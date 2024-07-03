@@ -158,7 +158,6 @@ class _vecBase(object):
                 set(item).issubset(_ATTRIBUTES[:self._N]) or set(item).issubset(_ATTRIBUTES_ALIASES[:self._N])):
             if _ATTRIBUTES_ALIASES.find(item[0]) != -1:
                 for char in item:
-                    print(char)
                     item = item.replace(char, _ATTRIBUTES[_ATTRIBUTES_ALIASES.find(char)])
             # return a new vector of the right size with the selected components
             return array_to_vec([getattr(self, attr) for attr in item])
